@@ -47,3 +47,49 @@ for i in range(len(longlist)):
                 zidian[c[0]]=c[1:1+j]
                 break
 print( zidian )
+
+    
+    
+    
+#点击查看服务商
+driver.implicitly_wait(10)
+xpath = '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout[2]/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout/android.widget.RelativeLayout/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[3]/android.view.ViewGroup[1]/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]/android.view.ViewGroup/android.widget.LinearLayout/android.support.v7.widget.RecyclerView/android.view.ViewGroup[5]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.View'
+element = driver.find_element(by=AppiumBy.XPATH, value=xpath)
+actions.move_to_element(element)
+actions.click()
+actions.perform()
+
+    
+    
+for i in range(4):
+    els5= driver.find_elements(by=AppiumBy.CLASS_NAME,value="android.view.View") #classname不对
+    for ele in els5:
+       name=ele.id
+       title=ele.text
+       if name in navlst:
+           continue
+       navlst.append(title)
+    driver.swipe(start_x=x, start_y=y1, end_x=x, end_y=y2, duration=800)
+
+a=0
+shortlist=[]
+for i in range(len(navlst)):
+    if navlst[i]=='以下服务商附近车辆较少，同时呼叫应答概率低':
+        a+=1
+    if  a==1:
+        for j in range(len(navlst[i:])):
+            shortlist.append(navlst[i+j])
+            if navlst[i+j]=='现在':
+                break
+        break
+    
+zidian={}
+for i in range(len(shortlist)):
+    if shortlist[i] in companylist:
+        d=shortlist[i:]
+        for j in range(len(d)):
+            if d[j] ==' 元':
+                zidian[d[0]]=d[1:j+1]
+                break
+        continue
+print(zidian)
