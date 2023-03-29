@@ -97,6 +97,7 @@ class Appium:
         button_id = 'com.autonavi.minimap:id/route_edit_summary_start'
         element = self.driver.find_element(by=AppiumBy.ID, value=button_id).click()
         self.driver.implicitly_wait(self.waitTime)
+        time.sleep(10)
         
         # Enter start location
         xpath = '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout[5]/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[2]/android.widget.EditText'
@@ -113,6 +114,7 @@ class Appium:
         xpath = '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout[5]/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.HorizontalScrollView/android.widget.LinearLayout/android.widget.FrameLayout[2]'
         element = self.driver.find_element(by=AppiumBy.XPATH, value=xpath).click()
         self.driver.implicitly_wait(self.waitTime)
+        time.sleep(5)
 
         # Switch to rideshare
         xpath = '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout[5]/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.HorizontalScrollView/android.widget.LinearLayout/android.widget.FrameLayout[2]'
@@ -206,5 +208,47 @@ class Appium:
                 self.scroll_up(self.driver)
 
 
-    def if_all_visited(visit_list):
+    def if_all_visited(self, visit_list):
         return len(visit_list) == sum(visit_list.values())
+    
+
+    def extract_pricing_formula(self, company, rideshare_type):
+        visited = {}
+        price_formula = {}
+        for name in company:
+            visited[name] = 0
+
+        while not self.if_all_visited(visited):
+            elements = self.driver.find_elements(by=AppiumBy.CLASS_NAME, value='android.view.ViewGroup')
+            for e in elements:
+                if (e.rect['height'] == 129 and e.rect['width'] == 639):
+                    sub_es = e.find_elements(by=AppiumBy.CLASS_NAME, value='android.view.View')
+                    company_name = sub_es[0].text
+                    if company_name in visited and visited[company_name] == 0:
+                        buttons = e.find_elements(by=AppiumBy.CLASS_NAME, value='android.widget.ImageView')
+                        flag = 0
+                        for button in buttons:
+                            if button.rect['height'] == 32 and button.rect['width'] == 32:
+                                flag = 1
+                                button.click()
+                                time.sleep(5)
+                                try:
+                                    elements = self.driver.find_elements(by=AppiumBy.CLASS_NAME, value='android.widget.TextView')
+                                    elements[-1].click()
+                                except:
+                                    elements = self.driver.find_elements(by=AppiumBy.CLASS_NAME, value='android.widget.TextView')
+                                    elements[-1].click()
+                                time.sleep(3)
+                                price_formula[company_name] = self.collect_text(self.driver)
+                                print(company_name, ' finished!')
+                                visited[company_name] = 1
+
+                                # Finished collecting pricing formula for a company, get back to rideshare page
+                                xpath = '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout[5]/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout/android.widget.FrameLayout/com.uc.webview.export.WebView/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[1]/android.view.View/android.view.View[1]/android.widget.Image'
+                                self.driver.find_element(by=AppiumBy.XPATH, value=xpath).click()
+                                time.sleep(3)
+                                xpath = '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout[5]/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout/android.widget.FrameLayout/com.uc.webview.export.WebView/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[1]/android.view.View/android.view.View[1]/android.widget.Image'
+                                self.driver.find_element(by=AppiumBy.XPATH, value=xpath).click()
+
+                                time.sleep(10)
+                        break

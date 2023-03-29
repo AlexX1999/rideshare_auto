@@ -34,7 +34,11 @@ if __name__ == "__main__":
             app.driver.implicitly_wait(app.waitTime)
 
             app.select_all('经济型')
+            app.driver.implicitly_wait(app.waitTime)
 
+            company = ['曹操出行']
+            app.extract_pricing_formula(company=company, rideshare_type='经济型')
+                
             success = 1
 
         except Exception as e:
