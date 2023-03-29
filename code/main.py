@@ -3,6 +3,10 @@ import time
 
 LOADING_WAITTIME = 5
 IMPLICITLY_WAITTIME = 30
+START = '上海大学'
+END = '静安寺'
+RIDESHARE_TYPE = '经济型'
+
 
 if __name__ == "__main__":
     success = 0
@@ -27,17 +31,17 @@ if __name__ == "__main__":
             time.sleep(LOADING_WAITTIME)
             app.driver.implicitly_wait(app.waitTime)
 
-            app.navigate_to_rideshare_page(start='上海大学', end='静安寺')
+            app.navigate_to_rideshare_page(start=START, end=END)
             app.driver.implicitly_wait(app.waitTime)
 
-            app.move_to_top('经济型')
+            app.move_to_top(RIDESHARE_TYPE)
             app.driver.implicitly_wait(app.waitTime)
 
-            app.select_all('经济型')
+            app.select_all(RIDESHARE_TYPE)
             app.driver.implicitly_wait(app.waitTime)
 
             company = ['曹操出行']
-            app.extract_pricing_formula(company=company, rideshare_type='经济型')
+            app.extract_pricing_formula(company=company, rideshare_type=RIDESHARE_TYPE)
                 
             success = 1
 
