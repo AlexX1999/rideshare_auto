@@ -35,6 +35,10 @@ class Appium:
     def connect(self, serverIP="http://127.0.0.1:4723/wd/hub"):
         self.driver = webdriver.Remote(serverIP, self.caps)
 
+
+    def click_by_coordinate(self, x=10, y=10):
+        TouchAction(self.driver).tap(None, x, y, 1).perform()
+
     
     def agreement(self):
         # Agree on user policy
@@ -48,7 +52,7 @@ class Appium:
     def desktop_icon(self):
         # Show gaode icon on desktop
         actions = ActionChains(self.driver)
-        add_auto_xpath = '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.Button[2]'
+        add_auto_xpath = '/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.Button[2]'
         element = self.driver.find_element(by=AppiumBy.XPATH, value=add_auto_xpath)
         actions.move_to_element(element)
         actions.click()
@@ -58,8 +62,7 @@ class Appium:
     def location_permission(self):
         # Grant gaode permission for accessing user location while using
         actions = ActionChains(self.driver)
-        button_id = 'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
-        element = self.driver.find_element(by=AppiumBy.ID, value=button_id)
+        element = self.driver.find_element(by=AppiumBy.ID, value="com.android.permissioncontroller:id/permission_allow_foreground_only_button")
         actions.move_to_element(element)
         actions.click()
         actions.perform()
@@ -114,21 +117,26 @@ class Appium:
         xpath = '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout[5]/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.HorizontalScrollView/android.widget.LinearLayout/android.widget.FrameLayout[2]'
         element = self.driver.find_element(by=AppiumBy.XPATH, value=xpath).click()
         self.driver.implicitly_wait(self.waitTime)
+        # self.click_by_coordinate()
         time.sleep(5)
 
         # Switch to rideshare
         xpath = '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout[5]/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.HorizontalScrollView/android.widget.LinearLayout/android.widget.FrameLayout[2]'
         element = self.driver.find_element(by=AppiumBy.XPATH, value=xpath).click()
         self.driver.implicitly_wait(self.waitTime)
-        time.sleep(15)
+        time.sleep(10)
         
         # Skip tutorial
-        xpath = '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout[5]/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout/android.widget.RelativeLayout/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup[5]'
-        element = self.driver.find_element(by=AppiumBy.XPATH, value=xpath).click()
-        self.driver.implicitly_wait(self.waitTime)
+        # xpath = '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout[5]/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout/android.widget.RelativeLayout/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup[5]'
+        # element = self.driver.find_element(by=AppiumBy.XPATH, value=xpath).click()
+        # self.driver.implicitly_wait(self.waitTime)
+        # Click a random spot on the screen to skip tutorial
+        self.click_by_coordinate(100, 100)
         time.sleep(3)
-        xpath = '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout[5]/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout/android.widget.RelativeLayout/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup[5]'
-        element = self.driver.find_element(by=AppiumBy.XPATH, value=xpath).click()
+        # xpath = '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout[5]/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout/android.widget.RelativeLayout/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup[5]'
+        # element = self.driver.find_element(by=AppiumBy.XPATH, value=xpath).click()
+        # Click a random spot on the screen to skip tutorial
+        self.click_by_coordinate(100, 100)
         time.sleep(3)
 
         # Show more options
@@ -252,3 +260,4 @@ class Appium:
 
                                 time.sleep(10)
                         break
+        return price_formula
